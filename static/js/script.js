@@ -189,8 +189,8 @@ function renderSoundsSection(container, letters, title) {
         
         // Show feedback
         feedbackElement.innerHTML = isCorrect ? 
-            '<div class="correct-feedback">መልካም! (Good job!)</div>' : 
-            '<div class="incorrect-feedback">ዳግም ሞክር (Try again)</div>';
+            '<div class="correct-feedback">ትክክል! (Good job!)</div>' : 
+            '<div class="incorrect-feedback">ድጋሚ ይሞክሩ (Try again)</div>';
         
         // Reveal the correct letter
         letterToGuessElement.textContent = currentLetter.letter;
@@ -230,18 +230,18 @@ function renderWordsSection(container, words, title) {
         <div class="words-container">
             <div class="word-cards"></div>
             <div class="word-game">
-                <h3>ቀራቱን ይመስርቱ (Build the Word)</h3>
+                <h3>ቃላቱን ይመስርቱ (Build the Word)</h3>
                 <div class="current-word-display">
                     <div class="word-image"></div>
                     <div class="word-audio-box">
                         <div class="word-meaning"></div>
-                        <button class="play-word-audio">▶ ይደምሱ (Listen)</button>
+                        <button class="play-word-audio">▶ ያዳምጡ (Listen)</button>
                     </div>
                 </div>
                 <div class="letter-drop-area"></div>
                 <div class="letter-bank"></div>
                 <div class="word-feedback"></div>
-                <button class="check-word-btn">ይከታተሉ (Check)</button>
+                <button class="check-word-btn">ያረጋግጡ (Check)</button>
                 <button class="next-word-btn">ቀጣይ (Next)</button>
             </div>
         </div>
@@ -403,7 +403,7 @@ function renderWordsSection(container, words, title) {
         const isCorrect = wordFromDropped === currentWord.word;
         
         if (isCorrect) {
-            wordFeedback.innerHTML = '<div class="correct-feedback">መልካም! (Good job!)</div>';
+            wordFeedback.innerHTML = '<div class="correct-feedback">ትክክል! (Good job!)</div>';
             checkWordButton.style.display = 'none';
             nextWordButton.style.display = 'block';
             
@@ -517,14 +517,14 @@ function renderPhrasesSection(container, phrases, title) {
         <div class="phrases-container">
             <div class="phrase-cards"></div>
             <div class="phrase-game">
-                <h3>ዝምች የሚመጡበትን ቃላት ያገናኝቡ (Match the phrases with their images)</h3>
+                <h3>ቃላቱን ከምስሉ ጋር ያዛምዱ (Match the phrases with their images)</h3>
                 <div class="match-game-container">
                     <div class="phrases-column"></div>
                     <div class="images-column"></div>
                 </div>
                 <div class="phrase-feedback"></div>
-                <button class="check-phrases-btn">ይከታተሉ (Check)</button>
-                <button class="reset-phrases-btn">ዳግም ሀያውት (Reset)</button>
+                <button class="check-phrases-btn">ያረጋግጡ (Check)</button>
+                <button class="reset-phrases-btn">በድጋሚ አስጀምር (Reset)</button>
             </div>
         </div>
     `;
@@ -673,7 +673,7 @@ function renderPhrasesSection(container, phrases, title) {
             
             // Check if all matches are found
             if (correctMatches === gameData.length) {
-                phraseFeedback.innerHTML = '<div class="correct-feedback">መልካም! ሁሉም ሥራ አጠናቀወት! (Great! You matched all the phrases!)</div>';
+                phraseFeedback.innerHTML = '<div class="correct-feedback">ትክክል! ሁሉም ሥራ አጠናቀወት! (Great! You matched all the phrases!)</div>';
                 
                 // Save progress
                 saveScore('phrases', gameData.length);
@@ -696,7 +696,7 @@ function renderPhrasesSection(container, phrases, title) {
     // Handle check button
     checkButton.addEventListener('click', () => {
         if (correctMatches === gameData.length) {
-            phraseFeedback.innerHTML = '<div class="correct-feedback">መልካም! ሁሉም ሥራ አጠናቀወት! (Great! You matched all the phrases!)</div>';
+            phraseFeedback.innerHTML = '<div class="correct-feedback">ትክክል! ሁሉም ሥራ አጠናቀወት! (Great! You matched all the phrases!)</div>';
         } else {
             phraseFeedback.innerHTML = `<div class="in-progress-feedback">ለሠረቱት ዳግም ይሞክሩ! (Keep trying! ${correctMatches} of ${gameData.length} matched.)</div>`;
         }

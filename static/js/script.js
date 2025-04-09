@@ -22,7 +22,7 @@ async function loadSection(section) {
     
     try {
         // Load lessons data from JSON file
-        const response = await fetch('/static/js/lessons.json');
+        const response = await fetch('static/js/lessons.json');
         if (!response.ok) {
             throw new Error('Could not load lessons data');
         }

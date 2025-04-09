@@ -1,0 +1,126 @@
+{
+  "alphabet": [
+    {
+      "letter": "ሀ",
+      "transliteration": "ha",
+      "audioFile": "static/audio/ha.mp3",
+      "example": "ሀገር (hager - country)"
+    },
+    {
+      "letter": "ለ",
+      "transliteration": "le",
+      "audioFile": "static/audio/le.mp3",
+      "example": "ለምን (lemen - why)"
+    },
+    {
+      "letter": "ሐ",
+      "transliteration": "ha",
+      "audioFile": "static/audio/ha_alt.mp3",
+      "example": "ሐሳብ (hasab - thought)"
+    },
+    {
+      "letter": "መ",
+      "transliteration": "me",
+      "audioFile": "static/audio/me.mp3",
+      "example": "መኪና (mekina - car)"
+    },
+    {
+      "letter": "ሰ",
+      "transliteration": "se",
+      "audioFile": "static/audio/se.mp3",
+      "example": "ሰላም (selam - hello/peace)"
+    },
+    {
+      "letter": "ረ",
+      "transliteration": "re",
+      "audioFile": "static/audio/re.mp3",
+      "example": "ረጅም (rejim - tall/long)"
+    },
+    {
+      "letter": "ቀ",
+      "transliteration": "qe",
+      "audioFile": "static/audio/qe.mp3",
+      "example": "ቀን (qen - day)"
+    },
+    {
+      "letter": "በ",
+      "transliteration": "be",
+      "audioFile": "static/audio/be.mp3",
+      "example": "በር (ber - door)"
+    }
+  ],
+  "words": [
+    {
+      "word": "እናት",
+      "transliteration": "inat",
+      "meaning": "mother",
+      "audioFile": "static/audio/inat.mp3",
+      "imageFile": "static/images/mother.png"
+    },
+    {
+      "word": "ቤት",
+      "transliteration": "bet",
+      "meaning": "house",
+      "audioFile": "static/audio/bet.mp3",
+      "imageFile": "static/images/house.png"
+    },
+    {
+      "word": "ቡና",
+      "transliteration": "buna",
+      "meaning": "coffee",
+      "audioFile": "static/audio/buna.mp3",
+      "imageFile": "static/images/coffee.png"
+    },
+    {
+      "word": "ዳቦ",
+      "transliteration": "dabo",
+      "meaning": "bread",
+      "audioFile": "static/audio/dabo.mp3",
+      "imageFile": "static/images/bread.png"
+    },
+    {
+      "word": "ልጅ",
+      "transliteration": "lij",
+      "meaning": "child",
+      "audioFile": "static/audio/lij.mp3",
+      "imageFile": "static/images/child.png"
+    }
+  ],
+  "phrases": [
+    {
+      "phrase": "ሰላም",
+      "transliteration": "selam",
+      "meaning": "hello/peace",
+      "audioFile": "static/audio/selam.mp3",
+      "imageFile": "static/images/greeting.png"
+    },
+    {
+      "phrase": "እንዴት ነህ?",
+      "transliteration": "indeyet neh?",
+      "meaning": "how are you? (male)",
+      "audioFile": "static/audio/indeyet_neh.mp3",
+      "imageFile": "static/images/how_are_you.png"
+    },
+    {
+      "phrase": "እንዴት ነሽ?",
+      "transliteration": "indeyet nesh?",
+      "meaning": "how are you? (female)",
+      "audioFile": "static/audio/indeyet_nesh.mp3",
+      "imageFile": "static/images/how_are_you_f.png"
+    },
+    {
+      "phrase": "አመሰግናለሁ",
+      "transliteration": "ameseginalehu",
+      "meaning": "thank you",
+      "audioFile": "static/audio/ameseginalehu.mp3",
+      "imageFile": "static/images/thank_you.png"
+    },
+    {
+      "phrase": "እባክዎ",
+      "transliteration": "ibakwo",
+      "meaning": "please",
+      "audioFile": "static/audio/ibakwo.mp3",
+      "imageFile": "static/images/please.png"
+    }
+  ]
+}

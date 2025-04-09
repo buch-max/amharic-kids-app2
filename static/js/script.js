@@ -21,35 +21,24 @@ async function loadSection(section) {
     contentDiv.innerHTML = `<h2>Loading ${section}...</h2>`;
     
     try {
+        // Get the base URL for GitHub Pages or local development
+        const baseUrl = window.location.pathname.includes('github.io') ? 
+            '/amharic-kids-app2/' : '/';
+            
         // Load lessons data from JSON file
         const response = await fetch('static/js/lessons.json');
         if (!response.ok) {
-            throw new Error('Could not load lessons data');
+            console.error('Failed to load lessons.json. Attempting fallback...');
+            // Try with full GitHub Pages path as fallback
+            const fallbackResponse = await fetch('https://buch-max.github.io/amharic-kids-app2/static/js/lessons.json');
+            if (!fallbackResponse.ok) {
+                throw new Error('Could not load lessons data after multiple attempts');
+            }
+            return await loadLessonsData(fallbackResponse, section, contentDiv);
         }
         
-        const lessons = await response.json();
-        
-        // Format the section title
-        const formattedTitle = section.charAt(0).toUpperCase() + section.slice(1);
-        
-        // Switch to different templates based on the section
-        switch(section) {
-            case 'alphabet':
-                renderAlphabetSection(contentDiv, lessons.alphabet, formattedTitle);
-                break;
-            case 'sounds':
-                renderSoundsSection(contentDiv, lessons.alphabet, formattedTitle);
-                break;
-            case 'words':
-                renderWordsSection(contentDiv, lessons.words, formattedTitle);
-                break;
-            case 'phrases':
-                renderPhrasesSection(contentDiv, lessons.phrases, formattedTitle);
-                break;
-            default:
-                contentDiv.innerHTML = `<h2>${formattedTitle}</h2>
-                                      <p>This section is under construction.</p>`;
-        }
+        // Process the data using our helper function
+        return await loadLessonsData(response, section, contentDiv);
     } catch (error) {
         console.error('Error loading section:', error);
         contentDiv.innerHTML = `<h2>Error</h2>
@@ -738,13 +727,53 @@ function saveScore(section, score) {
     }
 }
 
+// Helper function to process lessons data
+async function loadLessonsData(response, section, contentDiv) {
+    const lessons = await response.json();
+    
+    // Format the section title
+    const formattedTitle = section.charAt(0).toUpperCase() + section.slice(1);
+    
+    // Switch to different templates based on the section
+    switch(section) {
+        case 'alphabet':
+            renderAlphabetSection(contentDiv, lessons.alphabet, formattedTitle);
+            break;
+        case 'sounds':
+            renderSoundsSection(contentDiv, lessons.alphabet, formattedTitle);
+            break;
+        case 'words':
+            renderWordsSection(contentDiv, lessons.words, formattedTitle);
+            break;
+        case 'phrases':
+            renderPhrasesSection(contentDiv, lessons.phrases, formattedTitle);
+            break;
+        default:
+            contentDiv.innerHTML = `<h2>${formattedTitle}</h2>
+                                  <p>This section is under construction.</p>`;
+    }
+    
+    return lessons;
+}
+
 // Function to play audio and add animation to the letter card
 function playAudio(audioFile, letterElement) {
     // Create audio element if it doesn't exist
     let audio = document.querySelector(`audio[data-src="${audioFile}"]`);
     
     if (!audio) {
-        audio = new Audio(audioFile);
+        // Handle GitHub Pages paths
+        let audioPath = audioFile;
+        
+        // Check if we're on GitHub Pages and the audio fails to load
+        if (window.location.hostname.includes('github.io')) {
+            // Make sure the full GitHub Pages URL is used
+            if (!audioFile.startsWith('http')) {
+                audioPath = `https://buch-max.github.io/amharic-kids-app2/${audioFile}`;
+            }
+        }
+        
+        audio = new Audio(audioPath);
         audio.dataset.src = audioFile;
         document.body.appendChild(audio);
     }

@@ -394,7 +394,7 @@ function renderWordsSection(container, words, title) {
                               !droppedLetters.includes(undefined);
         
         if (!allBoxesFilled) {
-            wordFeedback.innerHTML = '<div class="incorrect-feedback">ደግሞ ሠምር! (Drop all letters first!)</div>';
+            wordFeedback.innerHTML = '<div class="incorrect-feedback">ሁሉንም ፊደሎች ሳጥኑ ውስጥ ያስገቡ! (Drop all letters first!)</div>';
             return;
         }
         
@@ -413,7 +413,7 @@ function renderWordsSection(container, words, title) {
             // Save progress
             saveScore('words', 1);
         } else {
-            wordFeedback.innerHTML = '<div class="incorrect-feedback">ዳግም ሞክር! (Try again!)</div>';
+            wordFeedback.innerHTML = '<div class="incorrect-feedback">ድጋሚ ይሞክሩ! (Try again!)</div>';
             
             // Reset the game to try again
             setTimeout(() => {
@@ -673,14 +673,14 @@ function renderPhrasesSection(container, phrases, title) {
             
             // Check if all matches are found
             if (correctMatches === gameData.length) {
-                phraseFeedback.innerHTML = '<div class="correct-feedback">ትክክል! ሁሉም ሥራ አጠናቀወት! (Great! You matched all the phrases!)</div>';
+                phraseFeedback.innerHTML = '<div class="correct-feedback">ትክክል! ሁሉንም አዛምደዋል! (Great! You matched all the phrases!)</div>';
                 
                 // Save progress
                 saveScore('phrases', gameData.length);
             }
         } else {
             // Show feedback for incorrect match
-            phraseFeedback.innerHTML = '<div class="incorrect-feedback">ይሞክሩ! ይመጥን ዳግም! (Try again!)</div>';
+            phraseFeedback.innerHTML = '<div class="incorrect-feedback"> ዳግም ይሞክሩ! (Try again!)</div>';
             
             // Clear feedback after a short delay
             setTimeout(() => {
@@ -696,9 +696,9 @@ function renderPhrasesSection(container, phrases, title) {
     // Handle check button
     checkButton.addEventListener('click', () => {
         if (correctMatches === gameData.length) {
-            phraseFeedback.innerHTML = '<div class="correct-feedback">ትክክል! ሁሉም ሥራ አጠናቀወት! (Great! You matched all the phrases!)</div>';
+            phraseFeedback.innerHTML = '<div class="correct-feedback">ትክክል! ሁሉንም አዛምደዋል! (Great! You matched all the phrases!)</div>';
         } else {
-            phraseFeedback.innerHTML = `<div class="in-progress-feedback">ለሠረቱት ዳግም ይሞክሩ! (Keep trying! ${correctMatches} of ${gameData.length} matched.)</div>`;
+            phraseFeedback.innerHTML = `<div class="in-progress-feedback"> ድጋሚ ይሞክሩ! (Keep trying! ${correctMatches} of ${gameData.length} matched.)</div>`;
         }
     });
     

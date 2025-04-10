@@ -4,49 +4,121 @@
       "letter": "ሀ",
       "transliteration": "ha",
       "audioFile": "static/audio/ha.mp3",
-      "example": "ሀገር (hager - country)"
+      "example": "ሀገር (hager - country)",
+      "forms": [
+        {"form": "ሀ", "audioFile": "static/audio/forms/ha_1.mp3"},
+        {"form": "ሁ", "audioFile": "static/audio/forms/hu_1.mp3"},
+        {"form": "ሂ", "audioFile": "static/audio/forms/hi_1.mp3"},
+        {"form": "ሃ", "audioFile": "static/audio/forms/ha_2.mp3"},
+        {"form": "ሄ", "audioFile": "static/audio/forms/he_1.mp3"},
+        {"form": "ህ", "audioFile": "static/audio/forms/h_1.mp3"},
+        {"form": "ሆ", "audioFile": "static/audio/forms/ho_1.mp3"}
+      ]
     },
     {
       "letter": "ለ",
       "transliteration": "le",
       "audioFile": "static/audio/le.mp3",
-      "example": "ለምለም (lemlem - green)"
+      "example": "ለምለም (lemlem - green)",
+      "forms": [
+        {"form": "ለ", "audioFile": "static/audio/forms/le_1.mp3"},
+        {"form": "ሉ", "audioFile": "static/audio/forms/lu_1.mp3"},
+        {"form": "ሊ", "audioFile": "static/audio/forms/li_1.mp3"},
+        {"form": "ላ", "audioFile": "static/audio/forms/la_1.mp3"},
+        {"form": "ሌ", "audioFile": "static/audio/forms/le_2.mp3"},
+        {"form": "ል", "audioFile": "static/audio/forms/l_1.mp3"},
+        {"form": "ሎ", "audioFile": "static/audio/forms/lo_1.mp3"}
+      ]
     },
     {
       "letter": "ሐ",
       "transliteration": "ha",
       "audioFile": "static/audio/ha_alt.mp3",
-      "example": "ሐሳብ (hasab - thought)"
+      "example": "ሐሳብ (hasab - thought)",
+      "forms": [
+        {"form": "ሐ", "audioFile": "static/audio/forms/ha_3.mp3"},
+        {"form": "ሑ", "audioFile": "static/audio/forms/hu_2.mp3"},
+        {"form": "ሒ", "audioFile": "static/audio/forms/hi_2.mp3"},
+        {"form": "ሓ", "audioFile": "static/audio/forms/ha_4.mp3"},
+        {"form": "ሔ", "audioFile": "static/audio/forms/he_2.mp3"},
+        {"form": "ሕ", "audioFile": "static/audio/forms/h_2.mp3"},
+        {"form": "ሖ", "audioFile": "static/audio/forms/ho_2.mp3"}
+      ]
     },
     {
       "letter": "መ",
       "transliteration": "me",
       "audioFile": "static/audio/me.mp3",
-      "example": "መኪና (mekina - car)"
+      "example": "መኪና (mekina - car)",
+      "forms": [
+        {"form": "መ", "audioFile": "static/audio/forms/me_1.mp3"},
+        {"form": "ሙ", "audioFile": "static/audio/forms/mu_1.mp3"},
+        {"form": "ሚ", "audioFile": "static/audio/forms/mi_1.mp3"},
+        {"form": "ማ", "audioFile": "static/audio/forms/ma_1.mp3"},
+        {"form": "ሜ", "audioFile": "static/audio/forms/me_2.mp3"},
+        {"form": "ም", "audioFile": "static/audio/forms/m_1.mp3"},
+        {"form": "ሞ", "audioFile": "static/audio/forms/mo_1.mp3"}
+      ]
     },
     {
-      "letter": "ሰ",
+      "letter": "ሠ",
       "transliteration": "se",
       "audioFile": "static/audio/se.mp3",
-      "example": "ሰላም (selam - hello/peace)"
+      "example": "ሠለም (selam - hello/peace)",
+      "forms": [
+        {"form": "ሠ", "audioFile": "static/audio/forms/se_1.mp3"},
+        {"form": "ሡ", "audioFile": "static/audio/forms/su_1.mp3"},
+        {"form": "ሢ", "audioFile": "static/audio/forms/si_1.mp3"},
+        {"form": "ሣ", "audioFile": "static/audio/forms/sa_1.mp3"},
+        {"form": "ሤ", "audioFile": "static/audio/forms/se_2.mp3"},
+        {"form": "ሥ", "audioFile": "static/audio/forms/s_1.mp3"},
+        {"form": "ሦ", "audioFile": "static/audio/forms/so_1.mp3"}
+      ]
     },
     {
       "letter": "ረ",
       "transliteration": "re",
       "audioFile": "static/audio/re.mp3",
-      "example": "ረጅም (rejim - tall/long)"
+      "example": "ረጅም (rejim - tall/long)",
+      "forms": [
+        {"form": "ረ", "audioFile": "static/audio/forms/re_1.mp3"},
+        {"form": "ሩ", "audioFile": "static/audio/forms/ru_1.mp3"},
+        {"form": "ሪ", "audioFile": "static/audio/forms/ri_1.mp3"},
+        {"form": "ራ", "audioFile": "static/audio/forms/ra_1.mp3"},
+        {"form": "ሬ", "audioFile": "static/audio/forms/re_2.mp3"},
+        {"form": "ር", "audioFile": "static/audio/forms/r_1.mp3"},
+        {"form": "ሮ", "audioFile": "static/audio/forms/ro_1.mp3"}
+      ]
+    },
+    {
+      "letter": "ሸ",
+      "transliteration": "she",
+      "audioFile": "static/audio/she.mp3",
+      "example": "ሸማ (shema - wax cloth)",
+      "forms": [
+        {"form": "ሸ", "audioFile": "static/audio/forms/she_1.mp3"},
+        {"form": "ሹ", "audioFile": "static/audio/forms/shu_1.mp3"},
+        {"form": "ሺ", "audioFile": "static/audio/forms/shi_1.mp3"},
+        {"form": "ሻ", "audioFile": "static/audio/forms/sha_1.mp3"},
+        {"form": "ሼ", "audioFile": "static/audio/forms/she_2.mp3"},
+        {"form": "ሽ", "audioFile": "static/audio/forms/sh_1.mp3"},
+        {"form": "ሾ", "audioFile": "static/audio/forms/sho_1.mp3"}
+      ]
     },
     {
       "letter": "ቀ",
       "transliteration": "qe",
       "audioFile": "static/audio/qe.mp3",
-      "example": "ቀን (qen - day)"
-    },
-    {
-      "letter": "በ",
-      "transliteration": "be",
-      "audioFile": "static/audio/be.mp3",
-      "example": "በር (ber - door)"
+      "example": "ቀን (qen - day)",
+      "forms": [
+        {"form": "ቀ", "audioFile": "static/audio/forms/qe_1.mp3"},
+        {"form": "ቁ", "audioFile": "static/audio/forms/qu_1.mp3"},
+        {"form": "ቂ", "audioFile": "static/audio/forms/qi_1.mp3"},
+        {"form": "ቃ", "audioFile": "static/audio/forms/qa_1.mp3"},
+        {"form": "ቄ", "audioFile": "static/audio/forms/qe_2.mp3"},
+        {"form": "ቅ", "audioFile": "static/audio/forms/q_1.mp3"},
+        {"form": "ቆ", "audioFile": "static/audio/forms/qo_1.mp3"}
+      ]
     }
   ],
   "words": [

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>አማርኛ ለልጆች - Amharic for Kids</title>
+    <link rel="stylesheet" href="static/css/styles.css">
+    <!-- Amharic font -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="learn-page">
+    <header>
+        <h1>አማርኛ ለልጆች</h1>
+        <h2>Amharic for Kids</h2>
+        <a href="index.html" class="home-button">Back to Home</a>
+    </header>
+
+    <main>
+        <nav class="main-menu">
+            <!-- These will be styled as big, colorful buttons -->
+            <button class="menu-item" data-section="alphabet">ፊደላት<br>Alphabet</button>
+            <button class="menu-item" data-section="sounds">ድምፆች<br>Sounds</button>
+            <button class="menu-item" data-section="words">ቃላት<br>Words</button>
+            <button class="menu-item" data-section="phrases">ዓ.ነገሮች<br>Phrases</button>
+        </nav>
+
+        <div id="content">
+            <!-- Content will be loaded here -->
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2025 አማርኛ ለልጆች</p>
+    </footer>
+
+    <!-- First load the main script.js file (contains all functions) -->
+    <script src="static/js/script.js"></script>
+    <!-- Then load learn.js which will only initialize when on the learn page -->
+    <script src="static/js/learn.js"></script>
+    <!-- Test script only loaded in development environment -->
+    <script src="static/js/app-tester.js"></script>
+</body>
+</html>

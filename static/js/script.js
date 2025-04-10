@@ -1,21 +1,37 @@
 // Main application logic
 document.addEventListener('DOMContentLoaded', () => {
-    // Set up menu button listeners
-    const menuButtons = document.querySelectorAll('.menu-item');
-    menuButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const section = button.dataset.section;
-            loadSection(section);
+    // Check if we're on the learn page (has .learn-page class on body)
+    const isLearnPage = document.body.classList.contains('learn-page');
+    
+    if (isLearnPage) {
+        // Set up menu button listeners
+        const menuButtons = document.querySelectorAll('.menu-item');
+        menuButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const section = button.dataset.section;
+                loadSection(section);
+            });
         });
-    });
 
-    // Load alphabet section by default
-    loadSection('alphabet');
+        // Load alphabet section by default
+        loadSection('alphabet');
+    }
 });
 
 // Function to load different sections
 async function loadSection(section) {
+    // Check if we're on the learn page
+    const isLearnPage = document.body.classList.contains('learn-page');
+    if (!isLearnPage) {
+        console.log('Not on learn page, skipping content loading');
+        return false;
+    }
+    
     const contentDiv = document.getElementById('content');
+    if (!contentDiv) {
+        console.error('Content div not found');
+        return false;
+    }
     
     // Clear current content
     contentDiv.innerHTML = `<h2>Loading ${section}...</h2>`;
@@ -43,6 +59,7 @@ async function loadSection(section) {
         console.error('Error loading section:', error);
         contentDiv.innerHTML = `<h2>Error</h2>
                               <p>Failed to load ${section} section. Please try again later.</p>`;
+        return false;
     }
 }
 
@@ -52,9 +69,49 @@ function renderAlphabetSection(container, letters, title) {
     container.innerHTML = `
         <h2>${title}</h2>
         <div class="alphabet-container"></div>
+        <div class="letter-modal">
+            <div class="modal-content">
+                <button class="close-expanded close-modal">&times;</button>
+                <div class="expanded-letter-container modal-letter-container">
+                    <!-- Expanded letter will appear here -->
+                </div>
+                <div class="expanded-forms-container modal-forms-container">
+                    <!-- Letter forms will appear here -->
+                </div>
+            </div>
+        </div>
     `;
     
     const alphabetContainer = container.querySelector('.alphabet-container');
+    const expansionModal = container.querySelector('.letter-modal');
+    const expandedLetterContainer = container.querySelector('.expanded-letter-container');
+    const expandedFormsContainer = container.querySelector('.expanded-forms-container');
+    const closeExpandedBtn = container.querySelector('.close-expanded');
+    
+    // Function to close the expansion view
+    function closeExpansionView() {
+        expansionModal.classList.remove('active');
+        expansionModal.classList.remove('show'); // Remove 'show' class for test compatibility
+        document.body.classList.remove('modal-open');
+        
+        // Wait for animation to complete before clearing content
+        setTimeout(() => {
+            if (!expansionModal.classList.contains('active')) {
+                expandedLetterContainer.innerHTML = '';
+                expandedFormsContainer.innerHTML = '';
+            }
+        }, 300);
+    }
+    
+    // Close expanded view when clicking the close button
+    closeExpandedBtn.addEventListener('click', closeExpansionView);
+    
+    // Close expanded view when pressing Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && expansionModal.classList.contains('active')) {
+            closeExpansionView();
+        }
+    });
     
     // Generate letters display
     letters.forEach(letter => {
@@ -65,18 +122,381 @@ function renderAlphabetSection(container, letters, title) {
             <div class="letter">${letter.letter}</div>
             <div class="transliteration">${letter.transliteration}</div>
             <div class="example">${letter.example}</div>
-            <button class="play-button" data-audio="${letter.audioFile}">
-                <span class="play-icon">▶</span> Play Sound
+            <button class="see-more-button">
+                <span class="expand-icon">+</span> Click to see more
             </button>
         `;
         
         alphabetContainer.appendChild(letterElement);
         
-        // Set up audio playback
-        const playButton = letterElement.querySelector('.play-button');
-        playButton.addEventListener('click', () => {
-            playAudio(letter.audioFile, letterElement);
+        // Set up click handling for the see more button
+        const seeMoreButton = letterElement.querySelector('.see-more-button');
+        seeMoreButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Display the expanded letter directly
+            displayExpandedLetter(letter, expandedLetterContainer, expandedFormsContainer, expansionModal);
         });
+        
+        // Make the entire letter card clickable for showing the expansion
+        letterElement.addEventListener('click', () => {
+            // Display the expanded letter
+            displayExpandedLetter(letter, expandedLetterContainer, expandedFormsContainer, expansionModal);
+        });
+        
+        // Helper function to display the expanded letter and handle all the related functionality
+        function displayExpandedLetter(letter, expandedLetterContainer, expandedFormsContainer, expansionModal) {
+            expandedLetterContainer.innerHTML = `
+                <div class="expanded-letter modal-letter">${letter.letter}</div>
+                <div class="expanded-transliteration">${letter.transliteration}</div>
+                <div class="expanded-example">${letter.example}</div>
+                <div class="expanded-buttons">
+                    <button class="prev-letter-button">
+                        Previous letter
+                    </button>
+                    <button class="expanded-play-button" data-audio="${letter.audioFile}">
+                        <span class="play-icon">▶</span> Play Sound
+                    </button>
+                    <button class="next-letter-button">
+                        Next letter
+                    </button>
+                </div>
+            `;
+            
+            // Clear and regenerate forms container
+            expandedFormsContainer.innerHTML = '';
+            
+            // Generate the 7 forms of the letter with audio support
+            generateLetterForms(letter.letter, expandedFormsContainer, letter);
+            
+            // Setup audio for the expanded letter - with current letter awareness
+            const expandedPlayButton = expandedLetterContainer.querySelector('.expanded-play-button');
+            // Set initial audio file for the main letter
+            expandedPlayButton.dataset.audio = letter.audioFile;
+            
+            expandedPlayButton.addEventListener('click', () => {
+                console.log('Play button clicked, using audio file:', expandedPlayButton.dataset.audio);
+                // Use the data-audio attribute that gets updated when clicking on letter forms
+                const audioFile = expandedPlayButton.dataset.audio;
+                playAudio(audioFile, expandedLetterContainer);
+            });
+            
+            // Setup next letter button
+            const nextLetterButton = expandedLetterContainer.querySelector('.next-letter-button');
+            nextLetterButton.addEventListener('click', () => {
+                // Find all letter cards
+                const letterCards = document.querySelectorAll('.letter-card');
+                const letterCardsArray = Array.from(letterCards);
+                
+                // Find the index of the current letter
+                const currentIndex = letterCardsArray.findIndex(card => 
+                    card.querySelector('.letter').textContent === letter.letter);
+                
+                // Calculate the next index (with wraparound)
+                const nextIndex = (currentIndex + 1) % letterCardsArray.length;
+                
+                // Get the next letter and display its expanded view
+                const nextLetterElement = letterCardsArray[nextIndex];
+                const nextLetterChar = nextLetterElement.querySelector('.letter').textContent;
+                const nextLetter = letters.find(l => l.letter === nextLetterChar);
+                if (nextLetter) {
+                    displayExpandedLetter(nextLetter, expandedLetterContainer, expandedFormsContainer, expansionModal);
+                }
+            });
+            
+            // Setup previous letter button
+            const prevLetterButton = expandedLetterContainer.querySelector('.prev-letter-button');
+            prevLetterButton.addEventListener('click', () => {
+                // Find all letter cards
+                const letterCards = document.querySelectorAll('.letter-card');
+                const letterCardsArray = Array.from(letterCards);
+                
+                // Find the index of the current letter
+                const currentIndex = letterCardsArray.findIndex(card => 
+                    card.querySelector('.letter').textContent === letter.letter);
+                
+                // Calculate the previous index (with wraparound)
+                const prevIndex = (currentIndex - 1 + letterCardsArray.length) % letterCardsArray.length;
+                
+                // Get the previous letter and display its expanded view
+                const prevLetterElement = letterCardsArray[prevIndex];
+                const prevLetterChar = prevLetterElement.querySelector('.letter').textContent;
+                const prevLetter = letters.find(l => l.letter === prevLetterChar);
+                if (prevLetter) {
+                    displayExpandedLetter(prevLetter, expandedLetterContainer, expandedFormsContainer, expansionModal);
+                }
+            });
+            
+            // Show the expansion modal
+            expansionModal.classList.add('active');
+            expansionModal.classList.add('show'); // Add 'show' class for test compatibility
+            document.body.classList.add('modal-open');
+        }
+    });
+}
+
+// Example words data for the letter forms
+const letterFormExamples = {
+    // ሀ family
+    'ሀ': 'ሀገር (hager - country)',
+    'ሁ': 'ሁለት (hulet - two)',
+    'ሂ': 'ሂሳብ (hisab - mathematics)',
+    'ሃ': 'ሃብት (habt - wealth)',
+    'ሄ': 'ሄደች (hedech - she went)',
+    'ህ': 'ህዝብ (hizb - people)',
+    'ሆ': 'ሆድ (hod - stomach)',
+    
+    // ለ family
+    'ለ': 'ለምለም (lemlem - green)',
+    'ሉ': 'ሉል (lul - pearl)',
+    'ሊ': 'ሊቅ (liq - scholar)',
+    'ላ': 'ላም (lam - cow)',
+    'ሌ': 'ሌሊት (lelit - night)',
+    'ል': 'ልብ (lib - heart)',
+    'ሎ': 'ሎሚ (lomi - lemon)',
+    
+    // ሐ family
+    'ሐ': 'ሐሳብ (hasab - thought)',
+    'ሑ': 'ሑሩር (hurur - heat)',
+    'ሒ': 'ሒደት (hidet - process)',
+    'ሓ': 'ሓዘን (hazen - sadness)',
+    'ሔ': 'ሔዋን (hewan - animals)',
+    'ሕ': 'ሕይወት (hiwot - life)',
+    'ሖ': 'ሖሣዕና (hosana - hosanna)',
+    
+    // መ family
+    'መ': 'መኪና (mekina - car)',
+    'ሙ': 'ሙዚቃ (muzika - music)',
+    'ሚ': 'ሚስት (mist - wife)',
+    'ማ': 'ማር (mar - honey)',
+    'ሜ': 'ሜዳ (meda - field)',
+    'ም': 'ምግብ (migib - food)',
+    'ሞ': 'ሞት (mot - death)',
+    
+    // Default for other letters
+    'default': '(example word)'
+};
+
+// Function to generate the 7 forms of an Amharic letter
+function generateLetterForms(baseLetter, container, letterData) {
+    // Use the forms from the letterData if available
+    const letterForms = [];
+    let formAudioMapping = {};
+    
+    if (letterData && letterData.forms) {
+        // Use the predefined forms from letterData
+        letterData.forms.forEach(formData => {
+            letterForms.push(formData.form);
+            formAudioMapping[formData.form] = formData.audioFile;
+        });
+    } else {
+        // Fallback to calculating forms if not available in data
+        const baseCode = baseLetter.charCodeAt(0);
+        
+        // The 7 forms pattern in Amharic
+        // If the letter is in the main Fidel set, we can calculate other forms
+        if (baseCode >= 0x1200 && baseCode <= 0x1357) {
+            // Some letters don't follow the exact pattern, but this works for most
+            // This is a simplified approach and may need adjustments for certain letters
+            const familyBase = Math.floor(baseCode / 8) * 8;
+            
+            // Generate each form
+            for (let i = 0; i < 7; i++) {
+                const formCode = familyBase + i;
+                if (formCode <= 0x137C) { // Stay within Ethiopic range
+                    letterForms.push(String.fromCharCode(formCode));
+                }
+            }
+        } else {
+            // Fallback if we can't calculate forms
+            letterForms.push(baseLetter);
+        }
+    }
+    
+    // Create a letter forms container with horizontal layout
+    const formsContainer = document.createElement('div');
+    formsContainer.className = 'letter-forms-container';
+    container.appendChild(formsContainer);
+    
+    // Create HTML for each form
+    letterForms.forEach((form, index) => {
+        const formElement = document.createElement('div');
+        formElement.className = 'letter-form';
+        
+        // Include only the form letter without individual play buttons
+        formElement.innerHTML = `
+            <div class="form-letter">${form}</div>
+        `;
+        
+        // Make the entire letter form box clickable
+        formElement.style.cursor = 'pointer'; // Show pointer cursor on hover
+        formElement.addEventListener('click', () => {
+            // Find the main expanded letter, transliteration and example in the modal
+            const expandedLetter = document.querySelector('.expanded-letter.modal-letter');
+            const expandedTransliteration = document.querySelector('.expanded-transliteration');
+            const expandedExample = document.querySelector('.expanded-example');
+            const formLetterElement = formElement.querySelector('.form-letter');
+            
+            if (expandedLetter) {
+                // Replace the main letter with the clicked form
+                expandedLetter.textContent = form;
+                
+                // Update the transliteration based on the form
+                if (expandedTransliteration) {
+                    // Find which form was clicked by comparing with all forms in the letter's data
+                    let formIndex = 0;
+                    let formData = null;
+                    
+                    if (letterData.forms && Array.isArray(letterData.forms)) {
+                        // Try to find the exact form object
+                        for (let i = 0; i < letterData.forms.length; i++) {
+                            if (letterData.forms[i].form === form) {
+                                formIndex = i;
+                                formData = letterData.forms[i];
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // Map of vowels for each form position
+                    const vowelMap = {
+                        0: 'e', // First form (ለ = 'le')
+                        1: 'u', // Second form (ሉ = 'lu')
+                        2: 'i', // Third form (ሊ = 'li')
+                        3: 'a', // Fourth form (ላ = 'la')
+                        4: 'ie', // Fifth form (ሌ = 'lie')
+                        5: '',  // Sixth form (ል = 'l')
+                        6: 'o'  // Seventh form (ሎ = 'lo')
+                    };
+                    
+                    // Get the consonant part by removing vowels from the base transliteration
+                    const baseTranslit = letterData.transliteration.replace(/[aeiou]/g, '');
+                    
+                    // For first form, we'll try to use the original transliteration from the data
+                    // For others, we'll apply the vowel pattern based on the form index
+                    if (formIndex === 0) {
+                        expandedTransliteration.textContent = letterData.transliteration;
+                    } else if (formIndex in vowelMap) {
+                        expandedTransliteration.textContent = baseTranslit + vowelMap[formIndex];
+                    }
+                    
+                    console.log(`Updated transliteration for form ${form} (index ${formIndex}): ${expandedTransliteration.textContent}`);
+                }
+                
+                // Update the example with form-specific example if available
+                if (expandedExample) {
+                    // Find common words that use this form
+                    const formExamples = {
+                        // ሀ and its forms
+                        'ሀ': 'ሀገር (hager - country)',
+                        'ሁ': 'ሁሉ (hulu - all)',
+                        'ሂ': 'ሂሳብ (hisab - math)',
+                        'ሃ': 'ሃይማኖት (haymanot - religion)',
+                        'ሄ': 'ሄደ (hede - went)',
+                        'ህ': 'ህይወት (hiyiwet - life)',
+                        'ሆ': 'ሆድ (hod - stomach)',
+                        
+                        // ለ and its forms
+                        'ለ': 'ለምለም (lemlem - green)',
+                        'ሉ': 'ሉል (lul - pearl)',
+                        'ሊ': 'ሊቅ (lik - scholar)',
+                        'ላ': 'ላም (lam - cow)',
+                        'ሌ': 'ሌሊት (lelit - night)',
+                        'ል': 'ልብ (lib - heart)',
+                        'ሎ': 'ሎሚ (lomi - lemon)',
+                        
+                        // ሐ and its forms
+                        'ሐ': 'ሐሳብ (hasab - thought)',
+                        'ሑ': 'ሑረት (huret - freedom)',
+                        'ሒ': 'ሒስ (his - scratch)',
+                        'ሓ': 'ሓይል (hayil - power)',
+                        'ሔ': 'ሔር (her - noble)',
+                        'ሕ': 'ሕዝብ (hizb - people)',
+                        'ሖ': 'ሖሳዕና (hosaina - hosanna)',
+                        
+                        // መ and its forms
+                        'መ': 'መኪና (mekina - car)',
+                        'ሙ': 'ሙሉ (mulu - full)',
+                        'ሚ': 'ሚስት (mist - wife)',
+                        'ማ': 'ማር (mar - honey)',
+                        'ሜ': 'ሜላ (mela - strategy)',
+                        'ም': 'ምግብ (migib - food)',
+                        'ሞ': 'ሞት (mot - death)',
+                        
+                        // ሠ and its forms
+                        'ሠ': 'ሠርግ (serg - wedding)',
+                        'ሡ': 'ሡስ (sus - third)',
+                        'ሢ': 'ሢ (si - sixty)',
+                        'ሣ': 'ሣር (sar - grass)',
+                        'ሤ': 'ሤጠ (sete - gave)',
+                        'ሥ': 'ሥራ (sira - work)',
+                        'ሦ': 'ሦስት (sost - three)',
+                        
+                        // ረ and its forms
+                        'ረ': 'ረጅም (rejim - tall)',
+                        'ሩ': 'ሩጫ (rucha - run)',
+                        'ሪ': 'ሪዝ (riz - rice)',
+                        'ራ': 'ራስ (ras - head)',
+                        'ሬ': 'ሬት (ret - prize)',
+                        'ር': 'ርጉብ (rigub - pigeon)',
+                        'ሮ': 'ሮቤ (robe - mango)',
+                        
+                        // ሸ and its forms
+                        'ሸ': 'ሸቀጦች (sheketoch - goods)',
+                        'ሹ': 'ሹሎ (shulo - piece)',
+                        'ሺ': 'ሺ (shi - thousand)',
+                        'ሻ': 'ሻሂ (shahi - tea)',
+                        'ሼ': 'ሼህ (sheh - sheik)',
+                        'ሽ': 'ሽታ (shita - smell)',
+                        'ሾ': 'ሾፌር (shofer - driver)',
+                        
+                        // ቀ and its forms
+                        'ቀ': 'ቀለም (kelem - color)',
+                        'ቁ': 'ቁጥር (kutir - number)',
+                        'ቂ': 'ቂም (kim - grudge)',
+                        'ቃ': 'ቃል (kal - word)',
+                        'ቄ': 'ቄስ (kes - priest)',
+                        'ቅ': 'ቅዳሜ (kidame - Saturday)',
+                        'ቆ': 'ቆሎ (kolo - roasted grain)'
+                    };
+                    
+                    // If we have a specific example for this form, use it
+                    if (formExamples[form]) {
+                        expandedExample.textContent = formExamples[form];
+                    } else {
+                        // Fallback: Use the original example with updated transliteration
+                        const exampleParts = letterData.example.split('(');
+                        const exampleText = exampleParts[0].trim();
+                        
+                        if (exampleParts.length > 1) {
+                            const meaningPart = exampleParts[1].split('-')[1]?.trim().replace(')', '') || '';
+                            
+                            // Update the example with the new transliteration
+                            expandedExample.textContent = `${exampleText} (${expandedTransliteration.textContent}${meaningPart ? ' - ' + meaningPart : ''})`;
+                        } else {
+                            expandedExample.textContent = letterData.example;
+                        }
+                    }
+                }
+                
+                // Update the main play button to use the audio file for this form
+                const playButton = document.querySelector('.expanded-play-button');
+                if (playButton && formAudioMapping[form]) {
+                    playButton.dataset.audio = formAudioMapping[form];
+                }
+                
+                // Highlight the selected form
+                document.querySelectorAll('.letter-form').forEach(el => {
+                    el.classList.remove('selected-form');
+                });
+                formElement.classList.add('selected-form');
+            }
+        });
+        
+        // No individual play buttons anymore, all audio is played through the main play button
+        
+        formsContainer.appendChild(formElement);
     });
 }
 
@@ -729,6 +1149,18 @@ function saveScore(section, score) {
 
 // Helper function to process lessons data
 async function loadLessonsData(response, section, contentDiv) {
+    // Double-check we're on the learn page
+    if (!document.body.classList.contains('learn-page')) {
+        console.log('Not on learn page, skipping content loading in loadLessonsData');
+        return false;
+    }
+    
+    // Make sure the content div exists
+    if (!contentDiv || !document.body.contains(contentDiv)) {
+        console.error('Content div not found or not in document');
+        return false;
+    }
+    
     const lessons = await response.json();
     
     // Format the section title
@@ -758,39 +1190,96 @@ async function loadLessonsData(response, section, contentDiv) {
 
 // Function to play audio and add animation to the letter card
 function playAudio(audioFile, letterElement) {
+    console.log('Playing audio file:', audioFile);
+    
+    if (!audioFile) {
+        console.error('No audio file provided');
+        showAudioMessage('No audio file specified', letterElement);
+        return;
+    }
+    
     // Create audio element if it doesn't exist
     let audio = document.querySelector(`audio[data-src="${audioFile}"]`);
+    console.log('Existing audio element:', audio);
     
     if (!audio) {
         // Handle GitHub Pages paths
         let audioPath = audioFile;
+        console.log('Creating new audio element with path:', audioPath);
         
         // Check if we're on GitHub Pages and the audio fails to load
         if (window.location.hostname.includes('github.io')) {
             // Make sure the full GitHub Pages URL is used
             if (!audioFile.startsWith('http')) {
                 audioPath = `https://buch-max.github.io/amharic-kids-app2/${audioFile}`;
+                console.log('Modified path for GitHub Pages:', audioPath);
             }
         }
         
+        // Create a new audio element
         audio = new Audio(audioPath);
         audio.dataset.src = audioFile;
         document.body.appendChild(audio);
+        console.log('New audio element created and appended to body with path:', audioPath);
     }
     
     // Play the audio
     audio.currentTime = 0;
+    console.log('Attempting to play audio...');
+    
+    // Show loading indicator
+    if (letterElement) {
+        letterElement.classList.add('playing');
+    }
+    
     audio.play().catch(error => {
         console.error('Failed to play audio:', error);
-        // Show a message that audio files need to be added
-        alert('Audio file not found. Please add audio recordings for the letters.');
+        // Remove playing animation if there was an error
+        if (letterElement) {
+            letterElement.classList.remove('playing');
+        }
+        showAudioMessage(`Audio file not found: ${audio.src}`, letterElement);
     });
     
-    // Add animation class to the letter
-    letterElement.classList.add('playing');
-    
-    // Remove animation class after animation ends
+    // Remove the animation class after the animation completes
     setTimeout(() => {
-        letterElement.classList.remove('playing');
+        if (letterElement) {
+            letterElement.classList.remove('playing');
+        }
     }, 1000);
+}
+
+// Helper function to show audio message
+function showAudioMessage(message, letterElement) {
+    console.log('Showing audio message:', message);
+    // Create a temporary message that fades away
+    const tempMsg = document.createElement('div');
+    tempMsg.className = 'temp-audio-message';
+    tempMsg.textContent = `🔊 ${message}`;
+    tempMsg.style.position = 'fixed';
+    tempMsg.style.top = '20%';
+    tempMsg.style.left = '50%';
+    tempMsg.style.transform = 'translateX(-50%)';
+    tempMsg.style.backgroundColor = 'rgba(0,0,0,0.8)';
+    tempMsg.style.padding = '10px 20px';
+    tempMsg.style.borderRadius = '4px';
+    tempMsg.style.color = 'white';
+    tempMsg.style.fontSize = '16px';
+    tempMsg.style.zIndex = '2000';
+    
+    // Add to the body and remove after animation
+    document.body.appendChild(tempMsg);
+    
+    // Fade out after 2 seconds
+    setTimeout(() => {
+        tempMsg.style.transition = 'opacity 1s';
+        tempMsg.style.opacity = '0';
+        
+        // Remove from DOM after fade out
+        setTimeout(() => {
+            if (tempMsg.parentNode) {
+                tempMsg.parentNode.removeChild(tempMsg);
+            }
+        }, 1000);
+    }, 3000);
 }

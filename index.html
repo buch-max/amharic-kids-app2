@@ -8,32 +8,165 @@
     <!-- Amharic font -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body>
-    <header>
-        <h1>አማርኛ ለልጆች</h1>
-        <h2>Amharic for Kids</h2>
-    </header>
-
-    <main>
-        <nav class="main-menu">
-            <!-- These will be styled as big, colorful buttons -->
-            <button class="menu-item" data-section="alphabet">ፊደላት<br>Alphabet</button>
-            <button class="menu-item" data-section="sounds">ድምፆች<br>Sounds</button>
-            <button class="menu-item" data-section="words">ቃላት<br>Words</button>
-            <button class="menu-item" data-section="phrases">ዓ.ነገሮች<br>Phrases</button>
-        </nav>
-
-        <div id="content">
-            <!-- Content will be loaded here -->
+<body class="home-page">
+    <!-- Fluffy clouds background -->
+    <div class="stars" id="stars">
+        <div class="fluffy-cloud" style="width: 120px; height: 70px; top: 60px; left: 10%;"></div>
+        <div class="fluffy-cloud" style="width: 150px; height: 80px; top: 150px; left: 30%;"></div>
+        <div class="fluffy-cloud" style="width: 100px; height: 60px; top: 80px; left: 60%;"></div>
+        <div class="fluffy-cloud" style="width: 130px; height: 75px; top: 200px; left: 80%;"></div>
+    </div>
+    
+    <!-- Books and shelf -->
+    <div class="bookshelf">
+        <div class="books">
+            <div class="book" style="background-color: #E74C3C;"></div>
+            <div class="book" style="background-color: #2ECC71;"></div>
+            <div class="book" style="background-color: #3498DB;"></div>
+            <div class="book" style="background-color: #F1C40F;"></div>
+            <div class="book" style="background-color: #9B59B6;"></div>
+            <div class="book" style="background-color: #1ABC9C;"></div>
+            <div class="book" style="background-color: #E67E22;"></div>
         </div>
-    </main>
+    </div>
+    
+    <!-- Ladder -->
+    <div class="ladder"></div>
+    
+    <!-- Globe -->
+    <div class="globe"></div>
+    
+    <!-- Animated bees -->
+    <div class="bee" style="top: 15%; left: 10%;"></div>
+    <div class="bee" style="top: 25%; left: 20%; animation-delay: 3s;"></div>
+    <div class="bee" style="top: 10%; left: 40%; animation-delay: 6s;"></div>
+    
+    <!-- Clouds -->
+    <div class="clouds">
+        <div class="cloud-layer cloud-layer-1"></div>
+        <div class="cloud-layer cloud-layer-2"></div>
+        <div class="cloud-layer cloud-layer-3"></div>
+    </div>
+    
+    <div class="welcome-container">
+        <h1 class="welcome-title-amharic">ወደ አማርኛ መማሪያ እንኳን ደህና መጣቹሁ!</h1>
+        <h2 class="welcome-title-english">Welcome to Amharic learning platform!</h2>
+        
+        <div class="animals-container">
+            <!-- Animated animals with inline SVG -->
+            <div class="animal fox">
+                <svg viewBox="0 0 120 120" class="animal-svg">
+                    <!-- Fox body -->
+                    <g class="animal-body">
+                        <path d="M60,30 C45,30 25,45 25,75 C25,90 40,95 60,95 C80,95 95,90 95,75 C95,45 75,30 60,30z" fill="#FF7529"/>
+                        <circle cx="45" cy="50" r="5" fill="white"/>
+                        <circle cx="75" cy="50" r="5" fill="white"/>
+                        <circle cx="45" cy="50" r="2" fill="black"/>
+                        <circle cx="75" cy="50" r="2" fill="black"/>
+                        <path d="M60,60 Q65,65 60,70 Q55,65 60,60" fill="black"/>
+                        <path d="M40,40 L25,20 Q20,15 25,10 Q30,15 35,20 L45,35" fill="#FF7529"/>
+                        <path d="M80,40 L95,20 Q100,15 95,10 Q90,15 85,20 L75,35" fill="#FF7529"/>
+                    </g>
+                    <!-- Fox tail -->
+                    <g class="animal-tail">
+                        <path d="M90,70 Q110,60 115,40 Q115,70 100,80 Q95,82 90,70" fill="#FF7529"/>
+                    </g>
+                </svg>
+            </div>
+            <div class="animal dog">
+                <svg viewBox="0 0 120 120" class="animal-svg">
+                    <!-- Dog body -->
+                    <g class="animal-body">
+                        <path d="M60,30 C40,30 30,50 30,70 C30,85 45,95 60,95 C75,95 90,85 90,70 C90,50 80,30 60,30z" fill="#9C6B3C"/>
+                        <circle cx="45" cy="50" r="5" fill="white"/>
+                        <circle cx="75" cy="50" r="5" fill="white"/>
+                        <circle cx="45" cy="50" r="2" fill="black"/>
+                        <circle cx="75" cy="50" r="2" fill="black"/>
+                        <path d="M60,65 Q65,70 60,75 Q55,70 60,65" fill="black"/>
+                        <ellipse cx="60" cy="55" rx="20" ry="15" fill="#D89B64"/>
+                        <path d="M45,30 L40,15 Q38,10 45,10 Q50,12 47,20 L50,30" fill="#9C6B3C"/>
+                        <path d="M75,30 L80,15 Q82,10 75,10 Q70,12 73,20 L70,30" fill="#9C6B3C"/>
+                    </g>
+                    <!-- Dog tail -->
+                    <g class="animal-tail">
+                        <path d="M85,65 Q100,60 105,50 Q110,70 90,75 z" fill="#9C6B3C"/>
+                    </g>
+                </svg>
+            </div>
+            <div class="animal bear">
+                <svg viewBox="0 0 120 120" class="animal-svg">
+                    <!-- Bear body -->
+                    <g class="animal-body">
+                        <path d="M60,25 C40,25 25,40 25,75 C25,95 45,100 60,100 C75,100 95,95 95,75 C95,40 80,25 60,25z" fill="#6D4C41"/>
+                        <circle cx="45" cy="50" r="6" fill="white"/>
+                        <circle cx="75" cy="50" r="6" fill="white"/>
+                        <circle cx="45" cy="50" r="3" fill="black"/>
+                        <circle cx="75" cy="50" r="3" fill="black"/>
+                        <ellipse cx="60" cy="65" rx="10" ry="8" fill="#8D6E63"/>
+                        <path d="M60,70 Q65,75 60,80 Q55,75 60,70" fill="black"/>
+                        <circle cx="35" cy="35" r="10" fill="#6D4C41"/>
+                        <circle cx="85" cy="35" r="10" fill="#6D4C41"/>
+                    </g>
+                    <!-- Bear tail -->
+                    <g class="animal-tail">
+                        <circle cx="90" cy="80" r="8" fill="#6D4C41"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+        
+        <button class="start-button" id="start-button">
+            <span class="english-text">Click to start learning Amharic</span>
+            <span class="amharic-text">አማርኛ ለመማር እዚህ ይጫኑ!</span>
+        </button>
+        
+        <!-- Stages Selection Popup -->
+        <div class="stages-popup" id="stages-popup">
+            <div class="stages-popup-content">
+                <h3>
+                    <span class="english-text">Select a Stage</span>
+                    <span class="amharic-text">ክፍል ይምረጡ</span>
+                </h3>
+                <div class="stages-container">
+                    <a href="learn.html" class="stage-button">
+                        <span class="english-text">Stage 1</span>
+                        <span class="amharic-text">ክፍል-1</span>
+                    </a>
+                    <button class="stage-button disabled">
+                        <span class="english-text">Stage 2</span>
+                        <span class="amharic-text">ክፍል-2</span>
+                    </button>
+                    <button class="stage-button disabled">
+                        <span class="english-text">Stage 3</span>
+                        <span class="amharic-text">ክፍል-3</span>
+                    </button>
+                    <button class="stage-button disabled">
+                        <span class="english-text">Stage 4</span>
+                        <span class="amharic-text">ክፍል-4</span>
+                    </button>
+                    <button class="stage-button disabled">
+                        <span class="english-text">Stage 5</span>
+                        <span class="amharic-text">ክፍል-5</span>
+                    </button>
+                    <button class="stage-button disabled">
+                        <span class="english-text">Stage 6</span>
+                        <span class="amharic-text">ክፍል-6</span>
+                    </button>
+                    <button class="stage-button disabled">
+                        <span class="english-text">Stage 7</span>
+                        <span class="amharic-text">ክፍል-7</span>
+                    </button>
+                </div>
+                <button class="close-popup" id="close-stages">×</button>
+            </div>
+        </div>
+    </div>
 
     <footer>
         <p>© 2025 አማርኛ ለልጆች</p>
     </footer>
 
-    <script src="static/js/script.js"></script>
-    <!-- Test script only loaded in development environment -->
-    <script src="static/js/app-tester.js"></script>
+    <!-- Only include home.js on the home page, no other scripts -->
+    <script src="static/js/home.js"></script>
 </body>
 </html>

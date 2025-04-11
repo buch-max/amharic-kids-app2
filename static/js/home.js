@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Generate stars for the night sky
     generateStars();
     
+    // Initialize background music
+    initBackgroundMusic();
+    
     // Add interactive elements and animations for the home page
     const startButton = document.querySelector('.start-button');
     const animals = document.querySelectorAll('.animal');
@@ -89,35 +92,102 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to generate random stars in the sky
     function generateStars() {
         const starsContainer = document.getElementById('stars');
-        const numberOfStars = 100; // Adjust for more or fewer stars
+        const starCount = 50;
         
-        for (let i = 0; i < numberOfStars; i++) {
+        for (let i = 0; i < starCount; i++) {
             const star = document.createElement('div');
-            star.classList.add('star');
+            star.className = 'star';
             
             // Random position
-            const xPos = Math.random() * 100;
-            const yPos = Math.random() * 100;
+            const top = Math.random() * 100;
+            const left = Math.random() * 100;
             
-            // Random size (1-3px)
-            const size = Math.random() * 2 + 1;
+            // Random size
+            const size = Math.random() * 3 + 1;
             
-            // Random twinkle duration (2-5s)
-            const twinkleDuration = (Math.random() * 3 + 2) + 's';
+            // Random opacity
+            const opacity = Math.random() * 0.5 + 0.3;
             
-            // Random delay for twinkling
-            const delay = Math.random() * 5 + 's';
+            // Random animation delay
+            const delay = Math.random() * 5;
             
-            // Apply styles
-            star.style.left = xPos + '%';
-            star.style.top = yPos + '%';
-            star.style.width = size + 'px';
-            star.style.height = size + 'px';
-            star.style.animationDuration = twinkleDuration;
-            star.style.animationDelay = delay;
+            star.style.top = `${top}%`;
+            star.style.left = `${left}%`;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.opacity = opacity;
+            star.style.animationDelay = `${delay}s`;
             
-            // Add to container
             starsContainer.appendChild(star);
         }
+    }
+
+    // Function to initialize background music
+    function initBackgroundMusic() {
+        const musicToggle = document.getElementById('music-toggle');
+        const backgroundMusic = document.getElementById('background-music');
+        const musicIcon = document.querySelector('.music-icon');
+        
+        console.log('Initializing background music');
+        
+        // Make sure the audio element is correctly loaded
+        backgroundMusic.load();
+        
+        // Check if user previously set music preference
+        const musicMuted = localStorage.getItem('musicMuted') === 'true';
+        console.log('Music muted state from localStorage:', musicMuted);
+        
+        // Always start with music paused due to browser autoplay policies
+        // User must explicitly click to play
+        musicToggle.classList.add('muted');
+        musicIcon.textContent = '🔇';
+        
+        // Ensure audio is paused initially
+        backgroundMusic.pause();
+        
+        // If audio was previously playing and user wants it that way,
+        // show an indicator that encourages them to click the play button
+        if (!musicMuted) {
+            musicToggle.classList.add('pulse-animation');
+            setTimeout(() => {
+                musicToggle.classList.remove('pulse-animation');
+            }, 3000);
+        }
+        
+        // Add click event listener to toggle music
+        musicToggle.addEventListener('click', function() {
+            console.log('Music button clicked');
+            
+            if (backgroundMusic.paused) {
+                console.log('Attempting to play music');
+                // Play music
+                const playPromise = backgroundMusic.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        console.log('Music started playing successfully');
+                        musicToggle.classList.remove('muted');
+                        musicIcon.textContent = '🔊';
+                        localStorage.setItem('musicMuted', 'false');
+                    }).catch(error => {
+                        console.error('Error playing music:', error);
+                        // Still show muted if play fails
+                        musicToggle.classList.add('muted');
+                        musicIcon.textContent = '🔇';
+                        localStorage.setItem('musicMuted', 'true');
+                        
+                        // Try one more time when user clicks again
+                        alert('Click again to play music. Some browsers require multiple interactions before playing audio.');
+                    });
+                }
+            } else {
+                console.log('Pausing music');
+                // Pause music
+                backgroundMusic.pause();
+                musicToggle.classList.add('muted');
+                musicIcon.textContent = '🔇';
+                localStorage.setItem('musicMuted', 'true');
+            }
+        });
     }
 });

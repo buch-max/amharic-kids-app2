@@ -1,11 +1,19 @@
-/* Ethiopian flag colors */
+/* Ethiopian flag colors and Blue color palette */
 :root {
+    /* Original Ethiopian colors */
     --eth-green: #009A49;
     --eth-yellow: #FEDD00;
     --eth-red: #EF3340;
     --text-dark: #333333;
     --background-light: #FFFFFF;
     --light-bg: #F8FFF4;
+    
+    /* Blue color palette */
+    --blue-darkest: #091540;
+    --blue-medium: #7692FF;
+    --blue-light: #ABD2FA;
+    --blue-navy: #3D518C;
+    --blue-bright: #1B2CC1;
 }
 
 /* Basic reset */
@@ -27,27 +35,27 @@ body {
 
 /* Learning page specific styles */
 .learn-page {
-    background-color: var(--light-bg);
+    background-color: var(--blue-light);
     background-image: 
         /* Left side patterns */
-        radial-gradient(circle at 15% 10%, var(--eth-green) 0%, var(--eth-green) 4%, transparent 4.5%),
-        radial-gradient(circle at 5% 25%, var(--eth-yellow) 0%, var(--eth-yellow) 6%, transparent 6.5%),
-        radial-gradient(circle at 20% 40%, var(--eth-red) 0%, var(--eth-red) 5%, transparent 5.5%),
-        radial-gradient(circle at 5% 60%, var(--eth-green) 0%, var(--eth-green) 7%, transparent 7.5%),
-        radial-gradient(circle at 15% 80%, var(--eth-yellow) 0%, var(--eth-yellow) 5%, transparent 5.5%),
+        radial-gradient(circle at 15% 10%, var(--blue-darkest) 0%, var(--blue-darkest) 4%, transparent 4.5%),
+        radial-gradient(circle at 5% 25%, var(--blue-medium) 0%, var(--blue-medium) 6%, transparent 6.5%),
+        radial-gradient(circle at 20% 40%, var(--blue-bright) 0%, var(--blue-bright) 5%, transparent 5.5%),
+        radial-gradient(circle at 5% 60%, var(--blue-navy) 0%, var(--blue-navy) 7%, transparent 7.5%),
+        radial-gradient(circle at 15% 80%, var(--blue-medium) 0%, var(--blue-medium) 5%, transparent 5.5%),
         /* Right side patterns */
-        radial-gradient(circle at 85% 15%, var(--eth-red) 0%, var(--eth-red) 5%, transparent 5.5%),
-        radial-gradient(circle at 95% 30%, var(--eth-green) 0%, var(--eth-green) 6%, transparent 6.5%),
-        radial-gradient(circle at 80% 45%, var(--eth-yellow) 0%, var(--eth-yellow) 4%, transparent 4.5%),
-        radial-gradient(circle at 95% 65%, var(--eth-red) 0%, var(--eth-red) 6%, transparent 6.5%),
-        radial-gradient(circle at 85% 85%, var(--eth-green) 0%, var(--eth-green) 5%, transparent 5.5%);
+        radial-gradient(circle at 85% 15%, var(--blue-bright) 0%, var(--blue-bright) 5%, transparent 5.5%),
+        radial-gradient(circle at 95% 30%, var(--blue-darkest) 0%, var(--blue-darkest) 6%, transparent 6.5%),
+        radial-gradient(circle at 80% 45%, var(--blue-medium) 0%, var(--blue-medium) 4%, transparent 4.5%),
+        radial-gradient(circle at 95% 65%, var(--blue-navy) 0%, var(--blue-navy) 6%, transparent 6.5%),
+        radial-gradient(circle at 85% 85%, var(--blue-darkest) 0%, var(--blue-darkest) 5%, transparent 5.5%);
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
 
 /* Header styles */
 header {
-    background: linear-gradient(to bottom, var(--eth-green), var(--eth-yellow), var(--eth-red));
+    background: linear-gradient(to bottom, var(--blue-darkest), var(--blue-medium), var(--blue-light));
     color: white;
     text-align: center;
     padding: 1rem;
@@ -97,7 +105,7 @@ main {
 
 .menu-item {
     background-color: white;
-    border: 3px solid var(--eth-green);
+    border: 3px solid var(--blue-navy);
     border-radius: 15px;
     padding: 1.5rem;
     font-size: 1.2rem;
@@ -114,7 +122,7 @@ main {
 footer {
     text-align: center;
     padding: 1rem;
-    background-color: var(--eth-green);
+    background-color: var(--blue-darkest);
     color: white;
     position: fixed;
     bottom: 0;
@@ -164,7 +172,7 @@ footer {
 }
 
 .stage-button {
-    background-color: var(--eth-green);
+    background-color: var(--blue-navy);
     color: white;
     border: none;
     border-radius: 50%;
@@ -183,7 +191,7 @@ footer {
 
 .stage-button:hover:not(.disabled) {
     transform: scale(1.1);
-    background-color: #007a3d;
+    background-color: var(--blue-medium);
 }
 
 .stage-button.disabled {
@@ -204,7 +212,7 @@ footer {
 }
 
 .close-popup:hover {
-    color: #d42d39;
+    color: var(--blue-bright);
 }
 
 /* Bilingual text styles */
@@ -283,7 +291,7 @@ footer {
 #content h2 {
     text-align: center;
     margin-bottom: 2rem;
-    color: var(--eth-green);
+    color: var(--blue-darkest);
     font-size: 1.8rem;
 }
 
@@ -299,7 +307,7 @@ footer {
 
 .letter-card {
     background-color: white;
-    border: 3px solid var(--eth-yellow);
+    border: 3px solid var(--blue-medium);
     border-radius: 15px;
     padding: 1.5rem;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
@@ -317,7 +325,7 @@ footer {
 .letter {
     font-size: 4rem;
     margin-bottom: 0.5rem;
-    color: var(--eth-green);
+    color: var(--blue-navy);
 }
 
 .transliteration {
@@ -331,7 +339,7 @@ footer {
 }
 
 .play-button, .expand-button {
-    background-color: var(--eth-green);
+    background-color: var(--blue-navy);
     color: white;
     border: none;
     border-radius: 5px;
@@ -347,16 +355,16 @@ footer {
 }
 
 .play-button:hover, .expand-button:hover {
-    background-color: #007a3d;
+    background-color: var(--blue-bright);
 }
 
 .expand-button {
-    background-color: var(--eth-red);
+    background-color: var(--blue-medium);
     margin-top: 1rem;
 }
 
 .expand-button:hover {
-    background-color: #d42d39;
+    background-color: var(--blue-bright);
 }
 
 .play-icon {
@@ -388,7 +396,7 @@ footer {
 }
 
 .modal-content {
-    background-color: #D1FFBD; /* Lighter, more subtle green as requested */
+    background-color: var(--blue-light); /* Using our blue-light variable */
     padding: 30px;
     border-radius: 16px;
     width: 95%;
@@ -421,7 +429,7 @@ footer {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: var(--eth-red);
+    background-color: var(--blue-medium);
     color: white;
     border: none;
     font-size: 1.8rem;
@@ -434,7 +442,7 @@ footer {
 }
 
 .close-expanded:hover {
-    background-color: #d42d39;
+    background-color: var(--blue-bright);
     transform: scale(1.1);
 }
 
@@ -449,7 +457,7 @@ footer {
 
 .expanded-letter {
     font-size: 8rem;
-    color: #333;
+    color: var(--blue-darkest);
     margin-bottom: 1rem;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -457,15 +465,15 @@ footer {
 .expanded-transliteration {
     font-size: 1.5rem;
     margin-bottom: 0.8rem;
-    color: #333;
+    color: var(--blue-navy);
 }
 
 .expanded-example {
     font-size: 1.2rem;
     margin-bottom: 1.5rem;
-    color: #333;
+    color: var(--blue-navy);
     padding: 0.5rem 1rem;
-    background-color: rgba(255, 255, 255, 0.6);
+    background-color: rgba(171, 210, 250, 0.3);
     border-radius: 8px;
 }
 
@@ -476,7 +484,7 @@ footer {
 }
 
 .expanded-play-button {
-    background-color: #FF4646;
+    background-color: var(--blue-navy);
     color: white;
     border: none;
     border-radius: 8px;
@@ -491,13 +499,13 @@ footer {
 }
 
 .expanded-play-button:hover {
-    background-color: #e03c3c;
+    background-color: var(--blue-bright);
 }
 
 .next-letter-button {
     background-color: white;
-    color: #FF4646;
-    border: 2px solid #FF4646;
+    color: var(--blue-navy);
+    border: 2px solid var(--blue-medium);
     border-radius: 8px;
     padding: 0.6rem 1.2rem;
     font-size: 1rem;
@@ -509,12 +517,12 @@ footer {
 }
 
 .next-letter-button:hover {
-    background-color: #FF4646;
+    background-color: var(--blue-medium);
     color: white;
 }
 
 .see-more-button {
-    background-color: var(--eth-green);
+    background-color: var(--blue-medium);
     color: white;
     border: none;
     border-radius: 8px;
@@ -529,7 +537,7 @@ footer {
 }
 
 .see-more-button:hover {
-    background-color: #1a8345;
+    background-color: var(--blue-bright);
 }
 
 .expand-icon {
@@ -1198,7 +1206,6 @@ body.modal-open {
     width: 100%;
     margin: 1rem 0;
     padding: 0.5rem;
-    background-color: #D1FFBD;
     border-radius: 8px;
 }
 
@@ -1651,7 +1658,7 @@ body.modal-open {
 
 .start-button {
     display: inline-block;
-    background-color: var(--eth-green);
+    background-color: var(--blue-navy);
     color: white;
     font-size: 1.3rem;
     font-weight: bold;
@@ -1665,7 +1672,7 @@ body.modal-open {
 }
 
 .start-button:hover {
-    background-color: #00783a;
+    background-color: var(--blue-bright);
     transform: scale(1.05);
     box-shadow: 0 6px 20px rgba(0, 154, 73, 0.5);
 }

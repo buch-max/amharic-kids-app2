@@ -9,12 +9,19 @@ import sys
 import os
 
 # Add parent directory to path so we can import server.py
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, parent_dir)
 import server
 
 class TestFrontend:
     @classmethod
     def setup_class(cls):
+        # Kill any running servers on port 8000
+        os.system("lsof -i :8000 | grep LISTEN | awk '{print $2}' | xargs kill -9 2>/dev/null || true")
+        # Store current directory
+        cls.original_dir = os.getcwd()
+        # Change to parent directory before starting server
+        os.chdir(parent_dir)
         # Start the server in a separate thread
         cls.server_thread = threading.Thread(target=server.main)
         cls.server_thread.daemon = True
@@ -26,13 +33,20 @@ class TestFrontend:
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
         self.driver = webdriver.Chrome(options=options)
-        self.driver.get('http://localhost:8000')
+        # Default to the learn page for most tests
+        self.driver.get('http://localhost:8000/learn.html')
 
     def teardown_method(self):
         self.driver.quit()
+        
+    @classmethod
+    def teardown_class(cls):
+        # Change back to original directory
+        os.chdir(cls.original_dir)
 
     def test_page_title(self):
         """Test that the page title is correct"""
+        # Test works on both pages as they share the same title
         assert "አማርኛ ለልጆች" in self.driver.title
 
     def test_menu_buttons(self):

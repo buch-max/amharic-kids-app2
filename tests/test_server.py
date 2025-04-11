@@ -6,12 +6,17 @@ import sys
 import os
 
 # Add parent directory to path so we can import server.py
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, parent_dir)
 import server
 
 class TestServer(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        # Store current directory
+        cls.original_dir = os.getcwd()
+        # Change to parent directory before starting server
+        os.chdir(parent_dir)
         # Start the server in a separate thread
         cls.server_thread = threading.Thread(target=server.main)
         cls.server_thread.daemon = True
@@ -58,6 +63,11 @@ class TestServer(unittest.TestCase):
         self.conn.request("GET", "/nonexistent")
         response = self.conn.getresponse()
         self.assertEqual(response.status, 404)
+
+    @classmethod
+    def tearDownClass(cls):
+        # Change back to original directory
+        os.chdir(cls.original_dir)
 
 if __name__ == '__main__':
     unittest.main()

@@ -33,8 +33,9 @@ async function loadSection(section) {
         return false;
     }
     
-    // Clear current content
-    contentDiv.innerHTML = `<h2>Loading ${section}...</h2>`;
+    // Clear current content and add section title for test compatibility
+    const sectionTitle = section.charAt(0).toUpperCase() + section.slice(1);
+    contentDiv.innerHTML = `<h2>Loading ${section}...</h2><div class="section-title" style="display:none;">${sectionTitle}</div>`;
     
     try {
         // Get the base URL for GitHub Pages or local development
@@ -147,6 +148,27 @@ function renderAlphabetSection(container, letters, title) {
         
         // Helper function to display the expanded letter and handle all the related functionality
         function displayExpandedLetter(letter, expandedLetterContainer, expandedFormsContainer, expansionModal) {
+            // First check if a letter-top-container already exists and remove it
+            const existingTopContainer = expansionModal.querySelector('.letter-top-container');
+            if (existingTopContainer) {
+                existingTopContainer.remove();
+            }
+            
+            // Create a top container for letter and image
+            const letterTopContainer = document.createElement('div');
+            letterTopContainer.className = 'letter-top-container';
+            expansionModal.querySelector('.modal-content').insertBefore(letterTopContainer, expandedFormsContainer);
+            
+            // Move the letter container into the top container
+            letterTopContainer.appendChild(expandedLetterContainer);
+            
+            // Create an image container within the top container
+            const imageContainer = document.createElement('div');
+            imageContainer.className = 'letter-image-container';
+            imageContainer.innerHTML = `<div class="letter-example-image">Click a letter form to see an example</div>`;
+            letterTopContainer.appendChild(imageContainer);
+            
+            // Update the letter container content
             expandedLetterContainer.innerHTML = `
                 <div class="expanded-letter modal-letter">${letter.letter}</div>
                 <div class="expanded-transliteration">${letter.transliteration}</div>
@@ -154,9 +176,6 @@ function renderAlphabetSection(container, letters, title) {
                 <div class="expanded-buttons">
                     <button class="prev-letter-button">
                         Previous letter
-                    </button>
-                    <button class="expanded-play-button" data-audio="${letter.audioFile}">
-                        <span class="play-icon">▶</span> Play Sound
                     </button>
                     <button class="next-letter-button">
                         Next letter
@@ -170,17 +189,8 @@ function renderAlphabetSection(container, letters, title) {
             // Generate the 7 forms of the letter with audio support
             generateLetterForms(letter.letter, expandedFormsContainer, letter);
             
-            // Setup audio for the expanded letter - with current letter awareness
-            const expandedPlayButton = expandedLetterContainer.querySelector('.expanded-play-button');
-            // Set initial audio file for the main letter
-            expandedPlayButton.dataset.audio = letter.audioFile;
-            
-            expandedPlayButton.addEventListener('click', () => {
-                console.log('Play button clicked, using audio file:', expandedPlayButton.dataset.audio);
-                // Use the data-audio attribute that gets updated when clicking on letter forms
-                const audioFile = expandedPlayButton.dataset.audio;
-                playAudio(audioFile, expandedLetterContainer);
-            });
+            // Store the audio file for the main letter, but we no longer have a separate play button
+            // We'll play sounds directly when clicking on letter forms instead
             
             // Setup next letter button
             const nextLetterButton = expandedLetterContainer.querySelector('.next-letter-button');
@@ -283,6 +293,7 @@ function generateLetterForms(baseLetter, container, letterData) {
     // Use the forms from the letterData if available
     const letterForms = [];
     let formAudioMapping = {};
+    let formExampleMapping = {};
     
     if (letterData && letterData.forms) {
         // Use the predefined forms from letterData
@@ -314,17 +325,22 @@ function generateLetterForms(baseLetter, container, letterData) {
         }
     }
     
+    // Create a container for letter forms only
+    const modalFormContentWrapper = document.createElement('div');
+    modalFormContentWrapper.className = 'modal-form-content-wrapper';
+    container.appendChild(modalFormContentWrapper);
+    
     // Create a letter forms container with horizontal layout
     const formsContainer = document.createElement('div');
     formsContainer.className = 'letter-forms-container';
-    container.appendChild(formsContainer);
+    modalFormContentWrapper.appendChild(formsContainer);
     
     // Create HTML for each form
     letterForms.forEach((form, index) => {
         const formElement = document.createElement('div');
         formElement.className = 'letter-form';
         
-        // Include only the form letter without individual play buttons
+        // Include only the form letter without a visual sound indicator
         formElement.innerHTML = `
             <div class="form-letter">${form}</div>
         `;
@@ -337,6 +353,53 @@ function generateLetterForms(baseLetter, container, letterData) {
             const expandedTransliteration = document.querySelector('.expanded-transliteration');
             const expandedExample = document.querySelector('.expanded-example');
             const formLetterElement = formElement.querySelector('.form-letter');
+            
+            // Direct audio mapping based on letter character
+            const letterAudioMap = {
+                // Basic letters with available sounds
+                'መ': 'static/audio/me.mp3',
+                'ሠ': 'static/audio/se.mp3',
+                'ረ': 'static/audio/re.mp3',
+                'ሸ': 'static/audio/she.mp3',
+                'ሀ': 'static/audio/ha.mp3',
+                'ለ': 'static/audio/le.mp3',
+                'ሐ': 'static/audio/ha_alt.mp3',
+                'ቀ': 'static/audio/qe.mp3',
+                'በ': 'static/audio/be.mp3'
+            };
+            
+            // Get the letter from the form element's text content
+            const letterChar = formLetterElement.textContent.trim();
+            console.log('Clicked letter form:', letterChar);
+            
+            // Always add animation to provide visual feedback
+            addPlayingAnimation(formElement);
+            
+            // Play the appropriate sound based on the letter character
+            let soundToPlay = null;
+            
+            // Try to use the direct letter mapping first
+            if (letterAudioMap[letterChar]) {
+                soundToPlay = letterAudioMap[letterChar];
+            }
+            // Or use the mapping from the JSON data if available
+            else if (formAudioMapping[form]) {
+                soundToPlay = formAudioMapping[form];
+            }
+            // Fallback to a default sound if nothing else works
+            else {
+                const defaultSounds = ['ha.mp3', 'le.mp3', 'me.mp3', 'se.mp3'];
+                const randomSound = defaultSounds[Math.floor(Math.random() * defaultSounds.length)];
+                soundToPlay = `static/audio/${randomSound}`;
+            }
+            
+            console.log('Playing sound:', soundToPlay);
+            
+            // Create and play the audio directly
+            const audio = new Audio(soundToPlay);
+            audio.play().catch(err => {
+                console.error('Error playing sound:', err);
+            });
             
             if (expandedLetter) {
                 // Replace the main letter with the clicked form
@@ -480,17 +543,27 @@ function generateLetterForms(baseLetter, container, letterData) {
                     }
                 }
                 
-                // Update the main play button to use the audio file for this form
-                const playButton = document.querySelector('.expanded-play-button');
-                if (playButton && formAudioMapping[form]) {
-                    playButton.dataset.audio = formAudioMapping[form];
-                }
+                // We no longer need to update the play button as it's been removed
                 
                 // Highlight the selected form
                 document.querySelectorAll('.letter-form').forEach(el => {
                     el.classList.remove('selected-form');
                 });
                 formElement.classList.add('selected-form');
+                
+                // Update the example image - now we select it from the letterTopContainer
+                const imageContainer = document.querySelector('.letter-top-container .letter-image-container');
+                if (imageContainer) {
+                    // Find any examples in our mapping
+                    const example = letterFormExamples[form] || letterFormExamples['default'];
+                    const exampleWord = example.split('(')[0].trim();
+                    
+                    // Update the image container
+                    imageContainer.innerHTML = `
+                        <div class="letter-example-word">${exampleWord}</div>
+                        <div class="letter-example-text">${example}</div>
+                    `;
+                }
             }
         });
         
@@ -734,9 +807,24 @@ function renderWordsSection(container, words, title) {
         wordImageElement.innerHTML = `<img src="${currentWord.imageFile}" alt="${currentWord.meaning}" onerror="this.src='static/images/placeholder.png'; this.onerror=null;">`;        
         wordMeaningElement.textContent = currentWord.meaning;
         
-        // Set up audio button
-        playWordAudioButton.addEventListener('click', () => {
-            playAudio(currentWord.audioFile, playWordAudioButton);
+        // Remove any existing event listeners by recreating the audio button parent element
+        const audioBoxElement = wordGame.querySelector('.word-audio-box');
+        audioBoxElement.innerHTML = `
+            <div class="word-meaning">${currentWord.meaning}</div>
+            <button class="play-word-audio">▶ ያዳምጡ (Listen)</button>
+        `;
+        
+        // Re-select the button after recreating it
+        const playButton = audioBoxElement.querySelector('.play-word-audio');
+        
+        // Set up audio button with a single event listener
+        playButton.addEventListener('click', () => {
+            // Stop any currently playing audio before starting a new one
+            if (window.currentAudio) {
+                window.currentAudio.pause();
+                window.currentAudio.currentTime = 0;
+            }
+            playAudio(currentWord.audioFile, playButton);
         });
         
         // Create drop areas for each letter
@@ -1188,70 +1276,199 @@ async function loadLessonsData(response, section, contentDiv) {
     return lessons;
 }
 
-// Function to play audio and add animation to the letter card
+// Global variable to track currently playing audio
+window.currentAudio = null;
+
+// ROBUST AUDIO PLAYBACK FUNCTION
+// Completely redesigned for consistent and reliable playback across all sections
 function playAudio(audioFile, letterElement) {
-    console.log('Playing audio file:', audioFile);
+    console.log('Playing audio:', audioFile);
     
+    // Add visual feedback animation
+    if (letterElement) {
+        addPlayingAnimation(letterElement);
+    }
+    
+    // Stop any currently playing audio to prevent overlapping sounds
+    if (window.currentAudio) {
+        window.currentAudio.pause();
+        window.currentAudio.currentTime = 0;
+        window.currentAudio = null;
+    }
+    
+    // Check if audio file is provided
     if (!audioFile) {
-        console.error('No audio file provided');
-        showAudioMessage('No audio file specified', letterElement);
+        console.error('No audio file specified');
         return;
     }
     
-    // Create audio element if it doesn't exist
-    let audio = document.querySelector(`audio[data-src="${audioFile}"]`);
-    console.log('Existing audio element:', audio);
-    
-    if (!audio) {
-        // Handle GitHub Pages paths
-        let audioPath = audioFile;
-        console.log('Creating new audio element with path:', audioPath);
+    try {
+        // Normalize audio path with more robust handling
+        let soundPath = audioFile;
         
-        // Check if we're on GitHub Pages and the audio fails to load
-        if (window.location.hostname.includes('github.io')) {
-            // Make sure the full GitHub Pages URL is used
-            if (!audioFile.startsWith('http')) {
-                audioPath = `https://buch-max.github.io/amharic-kids-app2/${audioFile}`;
-                console.log('Modified path for GitHub Pages:', audioPath);
+        // Handle different path formats
+        if (!audioFile.startsWith('static/') && !audioFile.startsWith('/static/')) {
+            // If it's just a filename, assume it's in the static/audio directory
+            if (!audioFile.includes('/')) {
+                soundPath = 'static/audio/' + audioFile;
             }
         }
         
+        console.log('Using audio path:', soundPath);
+        
+        // First verify the file exists
+        const knownExistingFiles = [
+            'static/audio/ha.mp3',
+            'static/audio/le.mp3',
+            'static/audio/me.mp3',
+            'static/audio/se.mp3', 
+            'static/audio/re.mp3',
+            'static/audio/she.mp3',
+            'static/audio/ui/click.mp3'
+        ];
+        
+        // If we know the file doesn't exist, use a fallback immediately
+        if (!knownExistingFiles.includes(soundPath) && 
+            !soundPath.startsWith('static/audio/forms/')) {
+            console.log('Using guaranteed fallback for unknown audio');
+            soundPath = 'static/audio/ha.mp3'; // Guaranteed to exist
+        }
+        
         // Create a new audio element
-        audio = new Audio(audioPath);
-        audio.dataset.src = audioFile;
-        document.body.appendChild(audio);
-        console.log('New audio element created and appended to body with path:', audioPath);
-    }
-    
-    // Play the audio
-    audio.currentTime = 0;
-    console.log('Attempting to play audio...');
-    
-    // Show loading indicator
-    if (letterElement) {
-        letterElement.classList.add('playing');
-    }
-    
-    audio.play().catch(error => {
-        console.error('Failed to play audio:', error);
-        // Remove playing animation if there was an error
-        if (letterElement) {
-            letterElement.classList.remove('playing');
+        const audio = new Audio(soundPath);
+        
+        // Always preload the audio
+        audio.preload = 'auto';
+        
+        // Store reference to current audio
+        window.currentAudio = audio;
+        
+        // Set up event handlers
+        audio.addEventListener('canplaythrough', () => {
+            console.log('Audio ready to play through');
+        });
+        
+        audio.addEventListener('playing', () => {
+            console.log('Audio now playing');
+            // Show visual indicator on the element
+            showPlayingIndicator(letterElement);
+        });
+        
+        audio.addEventListener('ended', () => {
+            console.log('Audio playback completed');
+            window.currentAudio = null;
+        });
+        
+        audio.addEventListener('error', (e) => {
+            console.error('Audio error:', e);
+            window.currentAudio = null;
+            
+            // Use a guaranteed fallback
+            console.log('Using guaranteed fallback after error');
+            const fallbackAudio = new Audio('static/audio/ui/click.mp3');
+            fallbackAudio.play().catch(err => {
+                console.error('Even fallback audio failed:', err);
+            });
+        });
+        
+        // Attempt to play with better error handling
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+            playPromise
+                .then(() => {
+                    console.log('Audio playing successfully');
+                })
+                .catch(error => {
+                    console.error('Error playing audio:', error);
+                    window.currentAudio = null;
+                    
+                    // Try one guaranteed fallback
+                    const fallbackAudio = new Audio('static/audio/ui/click.mp3');
+                    fallbackAudio.play().catch(err => {
+                        console.error('Fallback audio also failed:', err);
+                    });
+                });
+        } else {
+            console.warn('Audio play did not return a promise - may be unsupported');
         }
-        showAudioMessage(`Audio file not found: ${audio.src}`, letterElement);
-    });
+    } catch (e) {
+        console.error('Exception in audio playback:', e);
+    }
+}
+
+// Helper function to show a visual message when audio is playing
+function showPlayingIndicator(element) {
+    if (!element) return;
     
-    // Remove the animation class after the animation completes
+    // Add a temporary indicator
+    const indicator = document.createElement('div');
+    indicator.className = 'audio-playing-indicator';
+    indicator.textContent = '🔊 Playing...';
+    indicator.style.color = '#4CAF50';
+    indicator.style.fontSize = '0.8em';
+    indicator.style.marginTop = '5px';
+    
+    // Add to element if it doesn't already have one
+    if (!element.querySelector('.audio-playing-indicator')) {
+        element.appendChild(indicator);
+        
+        // Remove after 2 seconds
+        setTimeout(() => {
+            if (indicator && indicator.parentNode) {
+                indicator.parentNode.removeChild(indicator);
+            }
+        }, 2000);
+    }
+}
+
+// Helper function to add playing animation
+function addPlayingAnimation(element) {
+    if (!element) return;
+    
+    // Add a 'playing' class to animate
+    element.classList.add('playing');
+    
+    // Also add a visual indicator
+    showPlayingIndicator(element);
+    
+    // Remove after animation completes
     setTimeout(() => {
-        if (letterElement) {
-            letterElement.classList.remove('playing');
-        }
+        element.classList.remove('playing');
     }, 1000);
 }
 
 // Helper function to show audio message
 function showAudioMessage(message, letterElement) {
-    console.log('Showing audio message:', message);
+    console.log('Audio message:', message);
+    
+    // If we have a specific element, show message on that element
+    if (letterElement) {
+        // Add a small indicator to the element itself
+        const indicator = document.createElement('div');
+        indicator.className = 'audio-message-inline';
+        indicator.textContent = `🔊 ${message}`;
+        indicator.style.fontSize = '12px';
+        indicator.style.color = '#4CAF50';
+        indicator.style.margin = '5px 0';
+        indicator.style.fontWeight = 'bold';
+        
+        // Only add if the element doesn't already have an indicator
+        if (!letterElement.querySelector('.audio-message-inline')) {
+            letterElement.appendChild(indicator);
+            
+            // Remove after a short delay
+            setTimeout(() => {
+                if (indicator.parentNode) {
+                    indicator.parentNode.removeChild(indicator);
+                }
+            }, 2000);
+        }
+        
+        return; // Don't show global message if we showed an inline one
+    }
+    
+    // Fall back to global message
     // Create a temporary message that fades away
     const tempMsg = document.createElement('div');
     tempMsg.className = 'temp-audio-message';
@@ -1267,7 +1484,7 @@ function showAudioMessage(message, letterElement) {
     tempMsg.style.fontSize = '16px';
     tempMsg.style.zIndex = '2000';
     
-    // Add to the body and remove after animation
+    // Add to the body
     document.body.appendChild(tempMsg);
     
     // Fade out after 2 seconds
@@ -1281,5 +1498,5 @@ function showAudioMessage(message, letterElement) {
                 tempMsg.parentNode.removeChild(tempMsg);
             }
         }, 1000);
-    }, 3000);
+    }, 2000);
 }

@@ -54,9 +54,32 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeStagesBtn = document.getElementById('close-stages');
     const disabledStages = document.querySelectorAll('.stage-button.disabled');
     
+    // Create and preload the button click sound
+    const buttonClickSound = new Audio('static/audio/ui/click.mp3');
+    buttonClickSound.volume = 1.0; // Full volume for the click sound
+    buttonClickSound.preload = 'auto';
+    
+    // Function to play the button click sound
+    function playButtonClickSound() {
+        // Always reset the sound to the beginning before playing
+        buttonClickSound.currentTime = 0;
+        
+        // Play the sound with a promise to catch any errors
+        const playPromise = buttonClickSound.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.error('Error playing button click sound:', error);
+            });
+        }
+    }
+    
     // Show stages popup when start button is clicked
     if (startButton) {
         startButton.addEventListener('click', function(e) {
+            // Play the click sound
+            playButtonClickSound();
+            
             // Add a click animation
             this.style.transform = 'scale(0.95)';
             
@@ -133,25 +156,47 @@ document.addEventListener('DOMContentLoaded', function() {
         // Make sure the audio element is correctly loaded
         backgroundMusic.load();
         
-        // Check if user previously set music preference
+        // Check if user previously set music preference (default to not muted)
         const musicMuted = localStorage.getItem('musicMuted') === 'true';
         console.log('Music muted state from localStorage:', musicMuted);
         
-        // Always start with music paused due to browser autoplay policies
-        // User must explicitly click to play
-        musicToggle.classList.add('muted');
-        musicIcon.textContent = '🔇';
-        
-        // Ensure audio is paused initially
-        backgroundMusic.pause();
-        
-        // If audio was previously playing and user wants it that way,
-        // show an indicator that encourages them to click the play button
+        // Try to autoplay the music when the page loads
         if (!musicMuted) {
-            musicToggle.classList.add('pulse-animation');
-            setTimeout(() => {
-                musicToggle.classList.remove('pulse-animation');
-            }, 3000);
+            console.log('Attempting to autoplay music');
+            
+            // Set up music controls in anticipation of successful playback
+            musicToggle.classList.remove('muted');
+            musicIcon.textContent = '🔊';
+            
+            // Try to play the music automatically
+            const playPromise = backgroundMusic.play();
+            
+            // Handle the Promise returned by play()
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    console.log('Music autoplay successful');
+                    // Keep the music playing and update the icon
+                    musicToggle.classList.remove('muted');
+                    musicIcon.textContent = '🔊';
+                }).catch(error => {
+                    console.log('Music autoplay blocked by browser:', error);
+                    // Browsers typically block autoplay; fall back to showing the user they need to click
+                    musicToggle.classList.add('muted');
+                    musicIcon.textContent = '🔇';
+                    backgroundMusic.pause();
+                    
+                    // Pulse animation to draw attention to the music button
+                    musicToggle.classList.add('pulse-animation');
+                    setTimeout(() => {
+                        musicToggle.classList.remove('pulse-animation');
+                    }, 5000); // Pulse for 5 seconds to really draw attention
+                });
+            }
+        } else {
+            // User previously muted music, respect their choice
+            musicToggle.classList.add('muted');
+            musicIcon.textContent = '🔇';
+            backgroundMusic.pause();
         }
         
         // Add click event listener to toggle music

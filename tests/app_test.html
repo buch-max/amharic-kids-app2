@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>አማርኛ ለልጆች - Test Runner</title>
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <!-- Load original app scripts -->
+    <script src="../static/js/lessons.json" type="application/json"></script>
+    <script src="../static/js/script.js"></script>
+    <script src="../static/js/learn.js"></script>
+    <!-- Load the test script -->
+    <script src="app_test.js"></script>
+    <style>
+        /* Test runner styles */
+        .test-runner-header {
+            background-color: #eee;
+            padding: 10px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            border-bottom: 2px solid #333;
+        }
+        .test-runner-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .test-runner-controls button {
+            padding: 5px 10px;
+            border: 1px solid #333;
+            background-color: #fff;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .test-runner-controls button:hover {
+            background-color: #f0f0f0;
+        }
+        .test-runner-message {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        /* Add learn-page class to body for the tests */
+        body {
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="learn-page">
+    <div class="test-runner-header">
+        <h2>አማርኛ ለልጆች - Automated Test Runner</h2>
+        <div class="test-runner-message">
+            Running tests on the Amharic Kids App...
+        </div>
+        <div class="test-runner-controls">
+            <button id="restartTests">Restart Tests</button>
+            <button id="showApp">Show App</button>
+            <button id="closeTestHeader">Close This Header</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>አማርኛ ለልጆች (Amharic for Kids)</h1>
+        
+        <div class="main-menu">
+            <button class="menu-item" data-section="alphabet">
+                <span class="icon">ሀ</span>
+                <span class="text">ፊደላት<br/>Alphabets</span>
+            </button>
+            <button class="menu-item" data-section="sounds">
+                <span class="icon">🔊</span>
+                <span class="text">ድምጾች<br/>Sounds</span>
+            </button>
+            <button class="menu-item" data-section="words">
+                <span class="icon">📚</span>
+                <span class="text">ቃላት<br/>Words</span>
+            </button>
+            <button class="menu-item" data-section="phrases">
+                <span class="icon">💬</span>
+                <span class="text">ሐረጎች<br/>Phrases</span>
+            </button>
+        </div>
+        
+        <div id="content" class="content">
+            <h2>Loading...</h2>
+        </div>
+    </div>
+
+    <script>
+        // Test runner controls
+        document.getElementById('restartTests').addEventListener('click', () => {
+            location.reload();
+        });
+        
+        document.getElementById('showApp').addEventListener('click', () => {
+            window.open('../learn.html', '_blank');
+        });
+        
+        document.getElementById('closeTestHeader').addEventListener('click', () => {
+            document.querySelector('.test-runner-header').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

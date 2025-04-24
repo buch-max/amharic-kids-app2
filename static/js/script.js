@@ -582,10 +582,17 @@ function renderSoundsSection(container, letters, title) {
             <div class="score-display">ነጥብ (Score): <span id="current-score">0</span></div>
             <div class="sound-game">
                 <div class="game-prompt">ይህን ድምጽ ያድምጡ (Listen to this sound)</div>
-                <div class="letter-to-guess"></div>
-                <button class="play-sound-btn">▶ ድምጽ ያድምጡ (Play Sound)</button>
-                <div class="options-container"></div>
-                <div class="feedback"></div>
+                <div class="game-content-wrapper">
+                    <div class="game-main-area">
+                        <div class="letter-to-guess"></div>
+                        <button class="play-sound-btn">▶ ድምጽ ያድምጡ (Play Sound)</button>
+                        <div class="options-container"></div>
+                        <div class="text-feedback"></div>
+                    </div>
+                    <div class="result-symbol-container">
+                        <!-- Feedback symbol will appear here -->
+                    </div>
+                </div>
                 <button class="next-sound-btn">ቀጣይ (Next)</button>
             </div>
         </div>
@@ -613,7 +620,12 @@ function renderSoundsSection(container, letters, title) {
         // Clear previous content
         letterToGuessElement.textContent = '';
         optionsContainer.innerHTML = '';
-        feedbackElement.innerHTML = '';
+        
+        // Clear text feedback and result symbol
+        const textFeedbackElement = container.querySelector('.text-feedback');
+        const resultSymbolContainer = container.querySelector('.result-symbol-container');
+        if (textFeedbackElement) textFeedbackElement.innerHTML = '';
+        if (resultSymbolContainer) resultSymbolContainer.innerHTML = '';
         
         // Hide the next button
         nextButton.style.display = 'none';
@@ -663,6 +675,10 @@ function renderSoundsSection(container, letters, title) {
         gameActive = false;
         const isCorrect = selectedOption.letter === currentLetter.letter;
         
+        // Get reference to the feedback containers
+        const textFeedbackElement = container.querySelector('.text-feedback');
+        const resultSymbolContainer = container.querySelector('.result-symbol-container');
+        
         // Highlight the selected option
         const selectedButton = optionsContainer.querySelector(`[data-letter="${selectedOption.letter}"]`);
         selectedButton.classList.add(isCorrect ? 'correct' : 'incorrect');
@@ -680,10 +696,18 @@ function renderSoundsSection(container, letters, title) {
             saveScore('sounds', score);
         }
         
-        // Show feedback
-        feedbackElement.innerHTML = isCorrect ? 
-            '<div class="correct-feedback">ትክክል! (Good job!)</div>' : 
-            '<div class="incorrect-feedback">ድጋሚ ይሞክሩ (Try again)</div>';
+        // Show feedback text in the main area
+        if (isCorrect) {
+            textFeedbackElement.innerHTML = `<div class="correct-feedback">ትክክል! (Good job!)</div>`;
+            
+            // Show checkmark symbol on the right side
+            resultSymbolContainer.innerHTML = `<div class="result-symbol check-symbol">✅</div>`;
+        } else {
+            textFeedbackElement.innerHTML = `<div class="incorrect-feedback">ድጋሚ ይሞክሩ (Try again)</div>`;
+            
+            // Show X symbol on the right side
+            resultSymbolContainer.innerHTML = `<div class="result-symbol x-symbol">❌</div>`;
+        }
         
         // Reveal the correct letter
         letterToGuessElement.textContent = currentLetter.letter;

@@ -1327,11 +1327,23 @@ function playAudio(audioFile, letterElement) {
             'static/audio/ui/click.mp3'
         ];
         
-        // If we know the file doesn't exist, use a fallback immediately
+        // Don't use fallback for word and phrase audio files
         if (!knownExistingFiles.includes(soundPath) && 
-            !soundPath.startsWith('static/audio/forms/')) {
-            console.log('Using guaranteed fallback for unknown audio');
-            soundPath = 'static/audio/ha.mp3'; // Guaranteed to exist
+            !soundPath.startsWith('static/audio/forms/') &&
+            !soundPath.includes('static/audio/words/') &&
+            !soundPath.includes('static/audio/phrases/') &&
+            !soundPath.includes('inat.mp3') &&
+            !soundPath.includes('bet.mp3') &&
+            !soundPath.includes('buna.mp3') &&
+            !soundPath.includes('dabo.mp3') &&
+            !soundPath.includes('lij.mp3') &&
+            !soundPath.includes('selam.mp3') &&
+            !soundPath.includes('indeyet_neh.mp3') &&
+            !soundPath.includes('indeyet_nesh.mp3') &&
+            !soundPath.includes('ameseginalehu.mp3') &&
+            !soundPath.includes('ibakwo.mp3')) {
+            console.log('Using fallback only for truly unknown audio');
+            // Don't automatically fallback, only do so if the audio file truly doesn't exist
         }
         
         // Create a new audio element
